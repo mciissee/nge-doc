@@ -29,7 +29,7 @@
     "test": "ng test --code-coverage --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "publish:lib": "npm publish ./dist/nge-markdown",
+    "publish:lib": "npm publish ./dist/nge-doc",
     "publish:demo": "angular-cli-ghpages --dir=./dist/demo",
     "format:check": "prettier --list-different 'projects/**/*.ts'",
     "format:write": "prettier --write 'projects/**/*.ts'",
