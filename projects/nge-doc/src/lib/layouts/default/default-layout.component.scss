@@ -1,0 +1,29 @@
+main {
+  flex: 1;
+}
+
+mat-drawer {
+  width: 16%;
+  min-width: 16rem;
+  border-right: 1px solid #f8f8f8;
+  background-image: url(https://theia-ide.org/static/background-image-45f3f01a9e119bec24fba76deb9ac854.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+mat-drawer-content {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-drawer-container {
+  background-color: transparent;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.spacer {
+  flex: 1;
+}

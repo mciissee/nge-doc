@@ -1,0 +1,28 @@
+footer {
+  display: block;
+  width: 100%;
+  padding: 1rem 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: #fafbfc;
+  color: #586069;
+}
+
+/* DIRECT CHILDS OF FOOTER  */
+footer > div {
+  display: flex;
+  align-items: center;
+}
+
+/* ALL CHILDS OF FOOTER EXCEPT THE FIRST */
+footer :nth-child(n + 2) {
+  padding: 0.2rem 0.4rem;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.mat-icon-button {
+  width: auto;
+}

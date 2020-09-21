@@ -1,0 +1,37 @@
+<nav *ngIf="state$|async as state">
+  <header>
+    <mat-icon>menu_book</mat-icon>
+    <h2>{{ state.meta.name }}</h2>
+  </header>
+  <ul *ngIf="state.pages.length">
+    <ng-container *ngTemplateOutlet="template; context: { $implicit: state.pages }"></ng-container>
+  </ul>
+  <div class="spacer"></div>
+  <a class="nge-doc-logo" href="https://github.com/mciissee/nge-doc" target="_blank">
+    <img src="assets/nge-doc.png" alt="nge doc logo" width="48px" height="auto">
+  </a>
+</nav>
+<ng-template #template let-links>
+  <ng-container *ngFor="let link of links; trackBy: trackBy">
+    <ng-container *ngIf="!doc.isExpandable(link); else: expandable">
+      <li>
+        <a class="link" [routerLink]="link.href" [class.active]="doc.isActive(link)">
+          {{ link.title }}
+        </a>
+      </li>
+    </ng-container>
+    <ng-template #expandable>
+      <li class="caption" (click)="link.__expanded__ = !link.__expanded__">
+        <a class="link" [class.active]="doc.isActive(link)">
+          {{ link.title }}
+        </a>
+        <button mat-icon-button>
+          <mat-icon>{{ link.__expanded__ ? 'expand_more' : 'chevron_right'}}</mat-icon>
+        </button>
+      </li>
+      <ul *ngIf="link.__expanded__ || doc.isActive(link)">
+          <ng-container *ngTemplateOutlet="template; context: { $implicit: link.children }"></ng-container>
+      </ul>
+    </ng-template>
+  </ng-container>
+</ng-template>

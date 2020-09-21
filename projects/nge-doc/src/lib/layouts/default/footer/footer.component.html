@@ -1,0 +1,26 @@
+<footer *ngIf="state$|async as state">
+  <div>
+    <ng-container *ngIf="state.prevLink">
+      <button mat-icon-button [routerLink]="state.prevLink.href">
+        <mat-icon>chevron_left</mat-icon>
+        {{ state.prevLink.title }}
+      </button>
+    </ng-container>
+    <div class="spacer"></div>
+    <ng-container *ngIf="state.nextLink">
+      <button mat-icon-button [routerLink]="state.nextLink.href">
+        {{ state.nextLink.title }}
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </ng-container>
+  </div>
+  <div>
+    {{ state.meta.copyright }}
+    <div class="spacer"></div>
+    <ng-container *ngIf="state.meta.repo">
+      <a [href]="state.meta.repo.url" title="GitHub's repository">
+        <img src="https://icongr.am/devicon/github-original.svg?size=24&color=currentColor" >
+      </a>
+    </ng-container>
+  </div>
+</footer>
