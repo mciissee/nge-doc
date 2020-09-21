@@ -1,6 +1,7 @@
 # Getting started
 
-nge-doc is an [Angular](https://angular.io) library to generated documentation pages.
+Ngedoc is a documentation tool for [Angular](https://angular.io) applications.
+Using Ngedoc, you can create a branded dynamic site from a set from Markdown files or a dynamic Angular coomponents to host the documentation of your projects.
 
 ## Demonstration
 

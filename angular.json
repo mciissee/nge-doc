@@ -65,7 +65,8 @@
             "aot": true,
             "assets": [
               "projects/demo/src/favicon.ico",
-              "projects/demo/src/assets"
+              "projects/demo/src/assets",
+              { "glob": "**/*", "input": "./node_modules/nge-monaco/assets/themes", "output": "./assets/themes/" }
             ],
             "styles": [
               "projects/demo/src/styles.scss"
