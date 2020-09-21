@@ -3,7 +3,7 @@ import { Injectable, Injector, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { NgeDocInfo, NgeDocLink, NgeDocState } from './nge-doc';
+import { NgeDocInfo, NgeDocLink, NgeDocMeta, NgeDocState } from './nge-doc';
 
 @Injectable()
 export class NgeDocService implements OnDestroy {
@@ -20,9 +20,7 @@ export class NgeDocService implements OnDestroy {
         currLink: undefined,
     });
 
-    /** Root pages. */
     private readonly pages: NgeDocLink[] = [];
-    /** All pages. */
     private readonly links: NgeDocLink[] = [];
     private readonly subscriptions: Subscription[] = [];
 
@@ -41,6 +39,8 @@ export class NgeDocService implements OnDestroy {
     ngOnDestroy() {
         this.subscriptions.forEach(s => s.unsubscribe());
         this.subscriptions.splice(0, this.subscriptions.length);
+        this.pages.splice(0, this.pages.length);
+        this.links.splice(0, this.links.length);
     }
 
     /**
@@ -50,23 +50,21 @@ export class NgeDocService implements OnDestroy {
         this.ngOnDestroy();
 
         const config = this.activatedRoute.snapshot.data as NgeDocInfo;
-
-        this.pages.splice(0, this.pages.length);
-        this.links.splice(0, this.links.length);
+        const meta = await config.meta(this.injector);
 
         for (const o of config.pages) {
             const page = await o(this.injector);
-            this.createLinks(config, page);
+            this.createLinks(meta, page);
             this.pages.push(page);
         }
 
         this.subscriptions.push(
             this.router.events
                 .pipe(filter((e) => e instanceof NavigationEnd))
-                .subscribe(this.onChangeRoute.bind(this, config))
+                .subscribe(this.onChangeRoute.bind(this, meta))
         );
 
-        this.onChangeRoute(config);
+        this.onChangeRoute(meta);
     }
 
     /**
@@ -102,7 +100,7 @@ export class NgeDocService implements OnDestroy {
         return a + '/' + b;
     }
 
-    private createLinks(config: NgeDocInfo, page: NgeDocLink) {
+    private createLinks(meta: NgeDocMeta, page: NgeDocLink) {
         const createLink = (link: NgeDocLink, parent: string) => {
             link.href = this.join(parent, link.href);
             if (typeof link.content === 'string' && !link.content.endsWith('.md')) {
@@ -116,14 +114,14 @@ export class NgeDocService implements OnDestroy {
                 });
             }
         };
-        page.href = this.join(config.meta.root, page.href);
+        page.href = this.join(meta.root, page.href);
         if (typeof page.content === 'string' && !page.content.endsWith('.md')) {
             page.content += '.md';
         }
         page.children.forEach((link) => createLink(link, page.href));
     }
 
-    private onChangeRoute(config: NgeDocInfo) {
+    private async onChangeRoute(meta: NgeDocMeta) {
         if (!this.pages) {
             return;
         }
@@ -165,10 +163,10 @@ export class NgeDocService implements OnDestroy {
             currLink,
             nextLink,
             meta: {
-                root: config.meta.root,
-                name: config.meta.name,
-                repo: config.meta.repo,
-                copyright: config.meta.copyright,
+                root: meta.root,
+                name: meta.name,
+                repo: meta.repo,
+                copyright: meta.copyright,
             }
         });
     }

@@ -1,4 +1,4 @@
-import { Injector } from '@angular/core';
+import { InjectionToken, Injector } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 
 declare type NgeDocContent = string | ComponentType<any>;
@@ -6,9 +6,9 @@ declare type NgeDocContent = string | ComponentType<any>;
 /** Documentation site config. */
 export interface NgeDocInfo {
     /** Metadata informations about a documentation site. */
-    meta: NgeDocMeta;
+    meta: (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;
     /** Pages of the documentation site. */
-    pages: ((injector: Injector) => Promise<NgeDocLink>)[];
+    pages: ((injector: Injector) => NgeDocLink | Promise<NgeDocLink>)[];
 }
 
 /** Metadata informations about a documentation site. */
