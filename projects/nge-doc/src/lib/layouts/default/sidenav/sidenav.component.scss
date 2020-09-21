@@ -34,14 +34,14 @@ nav {
 
 ul,
 li,
-.link {
+a {
   margin: 0;
   padding: 0;
   list-style: none;
   text-decoration: none;
 }
 
-.link {
+a {
   font-size: 1em;
   text-rendering: optimizeLegibility;
   position: relative;
@@ -53,7 +53,7 @@ li,
   }
 }
 
-.link::before {
+a::before {
   content: '';
   position: absolute;
   width: 100%;
@@ -66,17 +66,15 @@ li,
   transition: all 0.3s ease-in-out 0s;
 }
 
-.link:hover::before,
-.link.active::before {
+a:hover::before,
+a.active::before {
   visibility: visible;
   transform: scaleX(1);
 }
 
-
-.nge-doc-logo {
-  margin: 1.5rem auto;
+.navigation-root {
+  margin: 1rem 0;
 }
-
 
 .caption {
   margin-top: .2rem;

@@ -50,12 +50,28 @@ export class NgeDocService implements OnDestroy {
         this.ngOnDestroy();
 
         const config = this.activatedRoute.snapshot.data as NgeDocInfo;
-        const meta = await config.meta(this.injector);
+
+        let meta: NgeDocMeta | undefined;
+        if (typeof config.meta === 'function') {
+            meta = await config.meta(this.injector);
+        } else {
+            meta = config.meta;
+        }
+        if (!meta) {
+            throw new Error('[nge-doc]: Missing config.meta');
+        }
 
         for (const o of config.pages) {
-            const page = await o(this.injector);
-            this.createLinks(meta, page);
-            this.pages.push(page);
+            let page: NgeDocLink | undefined;
+            if (typeof o === 'function') {
+                page = await o(this.injector);
+            } else {
+                page = o;
+            }
+            if (page) {
+                this.createLinks(meta, page);
+                this.pages.push(page);
+            }
         }
 
         this.subscriptions.push(
@@ -106,23 +122,17 @@ export class NgeDocService implements OnDestroy {
             if (typeof link.content === 'string' && !link.content.endsWith('.md')) {
                 link.content += '.md';
             }
-
             this.links.push(link);
-            if (link.children) {
-                link.children.forEach((child) => {
-                    createLink(child, link.href);
-                });
-            }
+
+            link.children?.forEach((child) => {
+                createLink(child, link.href);
+            });
         };
-        page.href = this.join(meta.root, page.href);
-        if (typeof page.content === 'string' && !page.content.endsWith('.md')) {
-            page.content += '.md';
-        }
-        page.children.forEach((link) => createLink(link, page.href));
+        createLink(page, meta.root);
     }
 
     private async onChangeRoute(meta: NgeDocMeta) {
-        if (!this.pages) {
+        if (!this.pages.length) {
             return;
         }
 
@@ -133,6 +143,8 @@ export class NgeDocService implements OnDestroy {
         } = this.state.value;
 
         const path = this.location.path();
+
+        // calculate current, previous and next links
 
         // https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
         const modulo = (a: number, n: number) => {
@@ -156,6 +168,16 @@ export class NgeDocService implements OnDestroy {
             return;
         }
 
+        // expand visible links
+
+        this.links.forEach(link => {
+            if (path.startsWith(link.href)) {
+                link.expanded = true;
+            }
+        });
+
+        // notify state change
+
         this.state.next({
             pages: this.pages,
             links: this.links,
@@ -169,5 +191,6 @@ export class NgeDocService implements OnDestroy {
                 copyright: meta.copyright,
             }
         });
+
     }
 }
