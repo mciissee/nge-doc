@@ -18,6 +18,7 @@ import { MainComponent } from './main/main.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 
 import { DefaultLayoutComponent } from './default-layout.component';
+import { NgeDocSharedModule } from '../../shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -31,7 +32,11 @@ import { DefaultLayoutComponent } from './default-layout.component';
     imports: [
         CommonModule,
         RouterModule,
+
+        NgeDocSharedModule,
+
         NgeMarkdownModule,
+
         MatListModule,
         MatIconModule,
         MatButtonModule,

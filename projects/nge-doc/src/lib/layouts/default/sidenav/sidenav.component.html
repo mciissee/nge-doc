@@ -7,9 +7,7 @@
     <ng-container *ngTemplateOutlet="template; context: { $implicit: state.pages }"></ng-container>
   </ul>
   <div class="spacer"></div>
-  <a class="nge-doc-logo" href="https://github.com/mciissee/nge-doc" target="_blank">
-    <img src="assets/nge-doc.png" alt="nge doc logo" width="48px" height="auto">
-  </a>
+  <nge-doc-logo></nge-doc-logo>
 </nav>
 <ng-template #template let-links>
   <ng-container *ngFor="let link of links; trackBy: trackBy">
