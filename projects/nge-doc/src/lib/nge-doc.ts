@@ -1,7 +1,4 @@
-import { ComponentType } from '@angular/cdk/portal';
-import { Injector } from '@angular/core';
-
-declare type NgeDocContent = string | ComponentType<any>;
+import { Injector, Type } from '@angular/core';
 
 declare type StaticPage = NgeDocLink;
 declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLink>;
@@ -9,12 +6,21 @@ declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLi
 declare type StaticMeta = NgeDocMeta;
 declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;
 
+declare type NgeDocRenderer = string | Promise<string> | Type<any> | Promise<Type<any>>;
+
 /** Documentation site config. */
-export interface NgeDocInfo {
+export interface NgeDocSettings {
     /** Metadata informations about a documentation site. */
     meta: StaticMeta | DynamicMeta;
     /** Pages of the documentation site. */
     pages: (StaticPage | DynamicPage)[];
+    /**
+     * Reference to a component that can render markdown content.
+     *
+     * The component should expose a `file` property to render a markdown from an url
+     * and a `data` property to render markdown from a string.
+     */
+    markdownRenderer?: Type<any> | Promise<Type<any>>;
 }
 
 /** Metadata informations about a documentation site. */
@@ -42,12 +48,35 @@ export interface NgeDocLink {
     href: string;
     /** Title of the link */
     title: string;
+    /**
+     * Content to render once the link is displayed.
+     *
+     * - A one line string value means that the renderer is an url to a markdown file to render.
+     *
+     * Example:
+     *
+     * `renderer: assets/my-file.md`
+     *
+     * - A multiline string value means that the renderer is a markdown string to render.
+     *
+     * Example:
+     *
+     * `renderer: "# My Title \n my paragraph \n ...."
+     *
+     * - A reference to a Component type means that the renderer is a dynamic component to render.
+     *
+     *  Example:
+     *
+     *  `renderer: MyComponent` // direct reference to a component
+     *
+     *  `renderer: import(....).then(m => m.MyComponent)` // reference to a lazy loaded component.
+     *
+     */
+    renderer: NgeDocRenderer;
     /** Sub links */
     children?: NgeDocLink[];
     /** A value indicating whether the link is expanded or not. */
     expanded?: boolean;
-    /** Content of the link (link to a markdown file or a Component to render). */
-    content: NgeDocContent;
 }
 
 /** Representation of the documentation state. */

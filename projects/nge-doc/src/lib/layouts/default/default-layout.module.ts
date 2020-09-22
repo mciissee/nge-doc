@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 // LIBS
-import { NgeMarkdownModule } from 'nge-markdown';
-
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,7 +12,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 // MODULE
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
-import { MainComponent } from './main/main.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 
 import { DefaultLayoutComponent } from './default-layout.component';
@@ -24,7 +21,6 @@ import { NgeDocSharedModule } from '../../shared/shared.module';
     declarations: [
         FooterComponent,
         HeaderComponent,
-        MainComponent,
         SidenavComponent,
         DefaultLayoutComponent,
     ],
@@ -34,8 +30,6 @@ import { NgeDocSharedModule } from '../../shared/shared.module';
         RouterModule,
 
         NgeDocSharedModule,
-
-        NgeMarkdownModule,
 
         MatListModule,
         MatIconModule,

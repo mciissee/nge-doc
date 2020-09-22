@@ -3,7 +3,7 @@ import { Injectable, Injector, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { NgeDocInfo, NgeDocLink, NgeDocMeta, NgeDocState } from './nge-doc';
+import { NgeDocSettings, NgeDocLink, NgeDocMeta, NgeDocState } from './nge-doc';
 
 @Injectable()
 export class NgeDocService implements OnDestroy {
@@ -49,19 +49,20 @@ export class NgeDocService implements OnDestroy {
     async setup(): Promise<void> {
         this.ngOnDestroy();
 
-        const config = this.activatedRoute.snapshot.data as NgeDocInfo;
+        const settings = this.activatedRoute.snapshot.data as NgeDocSettings;
 
         let meta: NgeDocMeta | undefined;
-        if (typeof config.meta === 'function') {
-            meta = await config.meta(this.injector);
+        if (typeof settings.meta === 'function') {
+            meta = await settings.meta(this.injector);
         } else {
-            meta = config.meta;
-        }
-        if (!meta) {
-            throw new Error('[nge-doc]: Missing config.meta');
+            meta = settings.meta;
         }
 
-        for (const o of config.pages) {
+        if (!meta) {
+            throw new Error('[nge-doc]: Missing settings.meta');
+        }
+
+        for (const o of settings.pages) {
             let page: NgeDocLink | undefined;
             if (typeof o === 'function') {
                 page = await o(this.injector);
@@ -119,11 +120,7 @@ export class NgeDocService implements OnDestroy {
     private createLinks(meta: NgeDocMeta, page: NgeDocLink) {
         const createLink = (link: NgeDocLink, parent: string) => {
             link.href = this.join(parent, link.href);
-            if (typeof link.content === 'string' && !link.content.endsWith('.md')) {
-                link.content += '.md';
-            }
             this.links.push(link);
-
             link.children?.forEach((child) => {
                 createLink(child, link.href);
             });

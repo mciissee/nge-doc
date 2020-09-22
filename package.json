@@ -49,7 +49,7 @@
     "@angular/router": "~9.1.12",
     "marked": "^1.1.1",
     "monaco-editor": "^0.21.0",
-    "nge-markdown": "0.0.3",
+    "nge-markdown": "0.0.4",
     "nge-monaco": "0.0.3",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",

@@ -13,7 +13,6 @@ import { DefaultLayoutModule } from './layouts/default/default-layout.module';
     ],
     imports: [
         CommonModule,
-
         RouterModule.forChild([
             { path: '**', pathMatch: 'full', component: NgeDocComponent }
         ]),
