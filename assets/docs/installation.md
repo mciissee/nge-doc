@@ -39,9 +39,3 @@ Add Angular material to your application.
 ```bash
 ng add @angular/material
 ```
-
-Install [nge-markdown](https://github.com/mciissee/nge-markdown) to allow Ngedoc to render markdown contents.
-
-```bash
-npm i nge-markdown marked
-```

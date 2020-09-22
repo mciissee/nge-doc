@@ -1,28 +1,16 @@
 # Usage
 
-Ngedoc usage is based on Angular router module. As for the router module, you define the routes (pages) of your documentation site using a configuration object then Ngedoc will handle the navigation between the pages.
+Ngedoc usage is based on Angular router module.
+As for the router module, you define the routes (pages) of your documentation site
+using a configuration object then Ngedoc will handle the navigation between the pages.
 
 ## Create one project called my-doc
 
 ```bash
-ng new my-doc
+ng new my-doc --routing
 ```
 
-## Add Ngedoc dependencies to the project
-
-```bash
-# Install Angular Material
-ng add @angular/material
-
-# Install nge-doc
-
-npm i nge-doc
-
-# Install nge-markdown used by nge-doc to render markdown content
-npm i nge-markdown marked
-```
-
-So, the default generated files looks like this (you must include HttpClientModule in app.module.ts).
+This command will generate an Angular project with the following generated files.
 
 ===app.module.ts
 
@@ -77,6 +65,35 @@ export class AppRoutingModule {}
 
 ===
 
+## Add Ngedoc dependencies to the project
+
+### Angular Material
+
+This library use some of Angular material components so you must integrate material in your application by using
+the following command.
+
+```bash
+ng add @angular/material
+```
+
+### nge-markdown
+
+As the library is intended to render markdown content you must install a markdown renderer library. Here
+we will install [nge-markdown](https://www.npmjs.com/package/nge-markdown) and we will see later how to integrate
+it to the library and how to use another markdown renderer library if you don't like this one.
+
+```bash
+npm i nge-markdown marked
+```
+
+### nge-doc
+
+Now that the dependencies of the Ngedoc are installed, you can install the library itself from npm.
+
+```bash
+npm i nge-doc
+```
+
 ## Register the documentation pages
 
 A documentation site in Ngedoc is a collection of links. Each link can refer either to a static page (Markdown file) or a dynamic page (Angular component).
@@ -87,7 +104,7 @@ To define the links of the site, you must register new route in the `routes` arr
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { NgeDocInfo } from 'nge-doc';
+import { NgeDocSettings } from 'nge-doc';
 
 const routes: Routes = [
     {
@@ -104,12 +121,13 @@ const routes: Routes = [
               },
           },
           pages: [
-              { title: 'Getting Started', href: 'getting-started', content: 'assets/docs/getting-started' },
-              { title: 'Installation', href: 'installation', content: 'assets/docs/installation' },
-              { title: 'Usage', href: 'usage', content: 'assets/docs/usage' },
-              { title: 'Configuration', href: 'configuration', content: 'assets/docs/configuration' },
+              { title: 'Getting Started', href: 'getting-started', renderer: 'assets/docs/getting-started' },
+              { title: 'Installation', href: 'installation', renderer: 'assets/docs/installation' },
+              { title: 'Usage', href: 'usage', renderer: 'assets/docs/usage' },
+              { title: 'Configuration', href: 'configuration', renderer: 'assets/docs/configuration' },
           ],
-        } as NgeDocInfo,
+          markdownRenderer: import('nge-markdown').then(m => m.NgeMarkdownComponent)
+        } as NgeDocSettings,
     },
     { path: '**', redirectTo: 'docs', pathMatch: 'full' }
 ];
@@ -128,4 +146,10 @@ const routes: Routes = [
 export class AppRoutingModule {}
 ```
 
-In this example, the content property of the links refers to markdown files placed in assets folder.
+In this example, the `renderer` property of the links refers to markdown files placed in assets folder.
+
+Since we want to render markdown files, we must define the property `markdownRenderer` to a component able to render a markdown
+from an url and from a string. `NgeMarkdownComponent` from `nge-doc` library is a component that can render markdown.
+
+You are free to use the markdown renderer you want by referencing another component that expose a `file` @Input() to render markdown
+from an url and a `data` @Input() to render a markdown from a string.
