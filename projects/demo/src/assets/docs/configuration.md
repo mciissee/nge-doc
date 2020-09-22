@@ -20,11 +20,12 @@ const routes: Routes = [
               },
           },
           pages: [
-              { title: 'Getting Started', href: 'getting-started', content: 'assets/docs/getting-started' },
-              { title: 'Installation', href: 'installation', content: 'assets/docs/installation' },
-              { title: 'Usage', href: 'usage', content: 'assets/docs/usage' },
-              { title: 'Configuration', href: 'configuration', content: 'assets/docs/configuration' },
+              { title: 'Getting Started', href: 'getting-started', renderer: 'assets/docs/getting-started' },
+              { title: 'Installation', href: 'installation', renderer: 'assets/docs/installation' },
+              { title: 'Usage', href: 'usage', renderer: 'assets/docs/usage' },
+              { title: 'Configuration', href: 'configuration', renderer: 'assets/docs/configuration' },
           ],
+          markdownRenderer: import('nge-markdown').then(m => m.NgeMarkdownComponent)
         } as NgeDocInfo,
     },
     { path: '**', redirectTo: 'docs', pathMatch: 'full' }
@@ -32,7 +33,6 @@ const routes: Routes = [
 ```
 
 ## Dynamic page
-
 
 ```typescript
 // WE ASSUME THAT MyDynamicComponent exists and it is declared in a module.
