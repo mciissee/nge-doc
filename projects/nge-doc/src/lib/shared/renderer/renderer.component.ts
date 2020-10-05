@@ -64,7 +64,7 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
         this.clearViewContainer();
 
         const factory = this.componentFactoryResolver.resolveComponentFactory(
-            await renderer
+            await renderer()
         );
 
         this.componentRef = this.viewContainerRef.createComponent(factory);
@@ -80,7 +80,7 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
     private async renderDynamicComponent(type: ComponentType<any>, inputs?: any) {
         this.clearViewContainer();
         const factory = this.componentFactoryResolver.resolveComponentFactory(type);
-        this.componentRef = this.viewContainerRef.createComponent(factory);
+        this.componentRef = this.viewContainerRef.createComponent(factory, 0, this.viewContainerRef.injector);
         if (inputs) {
             Object.keys(inputs).forEach(k => {
                 this.componentRef.instance[k] = inputs[k];

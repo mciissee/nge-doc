@@ -6,7 +6,7 @@ declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLi
 declare type StaticMeta = NgeDocMeta;
 declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;
 
-declare type NgeDocRenderer = string | Promise<string> | (() => Type<any> | Promise<Type<any>>);
+declare type NgeDocRenderer = string | Promise<string> | (() => (Type<any> | Promise<Type<any>>));
 
 /** Documentation site config. */
 export interface NgeDocSettings {
@@ -20,7 +20,7 @@ export interface NgeDocSettings {
      * The component should expose a `file` property to render a markdown from an url
      * and a `data` property to render markdown from a string.
      */
-    markdownRenderer?: Type<any> | Promise<Type<any>>;
+    markdownRenderer?: () => (Type<any> | Promise<Type<any>>);
 }
 
 /** Metadata informations about a documentation site. */

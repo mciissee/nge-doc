@@ -19,7 +19,7 @@ const documentation: NgeDocSettings = {
         { title: 'Usage', href: 'usage', renderer: 'assets/docs/usage.md' },
         { title: 'Configuration', href: 'configuration', renderer: 'assets/docs/configuration.md' },
     ],
-    markdownRenderer: import('nge-markdown').then(m => m.NgeMarkdownComponent)
+    markdownRenderer: () => import('nge-markdown').then(m => m.NgeMarkdownComponent)
 };
 
 const routes: Routes = [
@@ -43,3 +43,4 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class AppRoutingModule {}
+
