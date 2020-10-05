@@ -6,7 +6,6 @@ declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLi
 declare type StaticMeta = NgeDocMeta;
 declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;
 
-// TODO allow to pass inputs to dynamic component.
 declare type NgeDocRenderer = string | Promise<string> | (() => Type<any> | Promise<Type<any>>);
 
 /** Documentation site config. */
