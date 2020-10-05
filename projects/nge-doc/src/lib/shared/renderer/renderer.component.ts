@@ -1,7 +1,5 @@
-import { ComponentType } from '@angular/cdk/portal';
 import {
     Component,
-    ComponentFactoryResolver,
     ComponentRef,
     OnDestroy,
     OnInit,
@@ -9,22 +7,24 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { RendererService } from './renderer.service';
 import { NgeDocSettings, NgeDocState } from '../../nge-doc';
 import { NgeDocService } from '../../nge-doc.service';
 
 @Component({
     selector: 'nge-doc-renderer',
     template: '',
+    providers: [RendererService]
 })
 export class NgeDocRendererComponent implements OnInit, OnDestroy {
     private subscription?: Subscription;
-    private componentRef?: ComponentRef<any>;
+    private component?: ComponentRef<any>;
 
     constructor(
         private readonly doc: NgeDocService,
-        private readonly activatedRoute: ActivatedRoute,
-        private readonly viewContainerRef: ViewContainerRef,
-        private readonly componentFactoryResolver: ComponentFactoryResolver
+        private readonly route: ActivatedRoute,
+        private readonly renderer: RendererService,
+        private readonly container: ViewContainerRef,
     ) {}
 
     async ngOnInit() {
@@ -39,6 +39,7 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
     }
 
     private async onChangeRoute(state: NgeDocState) {
+        this.clearViewContainer();
         if (state.currLink) {
             const renderer = await state.currLink.renderer;
             switch (typeof renderer) {
@@ -46,14 +47,18 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
                     await this.rendererMarkdown(renderer);
                     break;
                 case 'function':
-                    this.renderDynamicComponent(await renderer(), state.currLink.inputs);
+                    this.component = await this.renderer.render({
+                        type: await renderer(),
+                        inputs: state.currLink.inputs,
+                        container: this.container,
+                    });
                     break;
             }
         }
     }
 
     private async rendererMarkdown(markdown: string) {
-        const settings = this.activatedRoute.snapshot.data as NgeDocSettings;
+        const settings = this.route.snapshot.data as NgeDocSettings;
         const renderer = settings.markdownRenderer;
         if (!renderer) {
             throw new Error(
@@ -61,36 +66,26 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
             );
         }
 
-        this.clearViewContainer();
+        let inputs: any = {
+            file: markdown // we assume that a string in one line is an url to a markdown file.
+        };
 
-        const factory = this.componentFactoryResolver.resolveComponentFactory(
-            await renderer()
-        );
-
-        this.componentRef = this.viewContainerRef.createComponent(factory);
         if (markdown.includes('\n')) { // markdown string contains at least two line
-            this.componentRef.instance.data = markdown;
-        } else { // we assume that a string in one line is an url to a markdown file.
-            this.componentRef.instance.file = markdown;
+            inputs = {
+                data: markdown
+            };
         }
 
-        this.componentRef.instance.ngOnChanges();
-    }
-
-    private async renderDynamicComponent(type: ComponentType<any>, inputs?: any) {
-        this.clearViewContainer();
-        const factory = this.componentFactoryResolver.resolveComponentFactory(type);
-        this.componentRef = this.viewContainerRef.createComponent(factory, 0, this.viewContainerRef.injector);
-        if (inputs) {
-            Object.keys(inputs).forEach(k => {
-                this.componentRef.instance[k] = inputs[k];
-            });
-        }
+        this.component = await this.renderer.render({
+            inputs,
+            type: await renderer(),
+            container: this.container
+        });
     }
 
     private clearViewContainer() {
-        this.componentRef?.destroy();
-        this.componentRef = undefined;
-        this.viewContainerRef.clear();
+        this.component?.destroy();
+        this.component = undefined;
+        this.container.clear();
     }
 }
