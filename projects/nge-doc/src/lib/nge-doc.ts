@@ -6,7 +6,8 @@ declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLi
 declare type StaticMeta = NgeDocMeta;
 declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;
 
-declare type NgeDocRenderer = string | Promise<string> | Type<any> | Promise<Type<any>>;
+// TODO allow to pass inputs to dynamic component.
+declare type NgeDocRenderer = string | Promise<string> | (() => Type<any> | Promise<Type<any>>);
 
 /** Documentation site config. */
 export interface NgeDocSettings {
@@ -67,9 +68,9 @@ export interface NgeDocLink {
      *
      *  Example:
      *
-     *  `renderer: MyComponent` // direct reference to a component
+     *  `renderer: () => MyComponent` // direct reference to a component
      *
-     *  `renderer: import(....).then(m => m.MyComponent)` // reference to a lazy loaded component.
+     *  `renderer: () => import(....).then(m => m.MyComponent)` // reference to a lazy loaded component.
      *
      */
     renderer: NgeDocRenderer;
@@ -77,6 +78,8 @@ export interface NgeDocLink {
     children?: NgeDocLink[];
     /** A value indicating whether the link is expanded or not. */
     expanded?: boolean;
+    /** Inputs to pass to the dynamic renderered component if `renderer` is a dynamic component. */
+    inputs?: any;
 }
 
 /** Representation of the documentation state. */

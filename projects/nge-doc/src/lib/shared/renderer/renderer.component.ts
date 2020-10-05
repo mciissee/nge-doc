@@ -18,8 +18,7 @@ import { NgeDocService } from '../../nge-doc.service';
 })
 export class NgeDocRendererComponent implements OnInit, OnDestroy {
     private subscription?: Subscription;
-    private dynamicComponentRef?: ComponentRef<any>;
-    private markdownComponentRef?: ComponentRef<any>;
+    private componentRef?: ComponentRef<any>;
 
     constructor(
         private readonly doc: NgeDocService,
@@ -34,7 +33,7 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
         );
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy() {
         this.clearViewContainer();
         this.subscription?.unsubscribe();
     }
@@ -47,7 +46,7 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
                     await this.rendererMarkdown(renderer);
                     break;
                 case 'function':
-                    this.renderDynamicComponent(renderer);
+                    this.renderDynamicComponent(await renderer(), state.currLink.inputs);
                     break;
             }
         }
@@ -68,27 +67,30 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
             await renderer
         );
 
-        this.markdownComponentRef = this.viewContainerRef.createComponent(factory);
+        this.componentRef = this.viewContainerRef.createComponent(factory);
         if (markdown.includes('\n')) { // markdown string contains at least two line
-            this.markdownComponentRef.instance.data = markdown;
+            this.componentRef.instance.data = markdown;
         } else { // we assume that a string in one line is an url to a markdown file.
-            this.markdownComponentRef.instance.file = markdown;
+            this.componentRef.instance.file = markdown;
         }
 
-        this.markdownComponentRef.instance.ngOnChanges();
+        this.componentRef.instance.ngOnChanges();
     }
 
-    private async renderDynamicComponent(type: ComponentType<any>) {
+    private async renderDynamicComponent(type: ComponentType<any>, inputs?: any) {
         this.clearViewContainer();
         const factory = this.componentFactoryResolver.resolveComponentFactory(type);
-        this.dynamicComponentRef = this.viewContainerRef.createComponent(factory);
+        this.componentRef = this.viewContainerRef.createComponent(factory);
+        if (inputs) {
+            Object.keys(inputs).forEach(k => {
+                this.componentRef.instance[k] = inputs[k];
+            });
+        }
     }
 
     private clearViewContainer() {
-        this.markdownComponentRef?.destroy();
-        this.markdownComponentRef = undefined;
-        this.dynamicComponentRef?.destroy();
-        this.dynamicComponentRef = undefined;
+        this.componentRef?.destroy();
+        this.componentRef = undefined;
         this.viewContainerRef.clear();
     }
 }
