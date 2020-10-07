@@ -27,8 +27,10 @@ export interface NgeDocSettings {
 export interface NgeDocMeta {
     /** Name of the documentation site. */
     name: string;
-    /** Root url of the documentation site.  */
+    /** Root url of the documentation site. (absolute url starting with `/`)  */
     root: string;
+    /** Url to the logo to the documentation logo. */
+    logo?: string;
     /** Optional informations about a github repository linked to the site */
     repo?: {
         /** Url of the repository */
@@ -79,6 +81,8 @@ export interface NgeDocLink {
     expanded?: boolean;
     /** Inputs to pass to the dynamic renderered component if `renderer` is a dynamic component. */
     inputs?: any;
+    /** Optional icon */
+    icon?: string;
 }
 
 /** Representation of the documentation state. */

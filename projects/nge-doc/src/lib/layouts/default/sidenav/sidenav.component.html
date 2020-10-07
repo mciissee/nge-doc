@@ -1,6 +1,11 @@
 <nav *ngIf="state$|async as state">
   <header>
-    <mat-icon>menu_book</mat-icon>
+    <ng-container *ngIf="state.meta.logo; else: nologo">
+      <img [src]="state.meta.logo" alt="Documentation Logo">
+    </ng-container>
+    <ng-template #nologo>
+      <mat-icon>menu_book</mat-icon>
+    </ng-template>
     <h2>{{ state.meta.name }}</h2>
   </header>
   <ul class="navigation-root" *ngIf="state.pages.length">
@@ -14,6 +19,7 @@
     <ng-container *ngIf="!doc.isExpandable(link); else: expandable">
       <li>
         <a [routerLink]="link.href" [class.active]="doc.isActive(link)">
+          <img [src]="link.icon" *ngIf="link.icon">
           {{ link.title }}
         </a>
       </li>
@@ -21,6 +27,7 @@
     <ng-template #expandable>
       <li class="caption" (click)="link.expanded = !link.expanded">
         <a [class.active]="doc.isActive(link)">
+          <img [src]="link.icon" *ngIf="link.icon">
           {{ link.title }}
         </a>
         <button mat-icon-button>
