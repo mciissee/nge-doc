@@ -1,7 +1,7 @@
 import { Injector, Type } from '@angular/core';
 
 declare type StaticPage = NgeDocLink;
-declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLink>;
+declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLink> | NgeDocLink[] | Promise<NgeDocLink[]>;
 
 declare type StaticMeta = NgeDocMeta;
 declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;

@@ -62,17 +62,25 @@ export class NgeDocService implements OnDestroy {
             throw new Error('[nge-doc]: Missing settings.meta');
         }
 
-        for (const o of settings.pages) {
-            let page: NgeDocLink | undefined;
-            if (typeof o === 'function') {
-                page = await o(this.injector);
+        for (const page of settings.pages) {
+            let linkOrLinkArray: NgeDocLink | NgeDocLink[] | undefined;
+            let links: NgeDocLink[] = [];
+            if (typeof page === 'function') {
+                linkOrLinkArray = await page(this.injector);
             } else {
-                page = o;
+                linkOrLinkArray = page;
             }
-            if (page) {
-                this.createLinks(meta, page);
-                this.pages.push(page);
+
+            if (Array.isArray(linkOrLinkArray)) {
+                links = links.concat(linkOrLinkArray);
+            } else {
+                links.push(linkOrLinkArray);
             }
+
+            links.forEach(link => {
+                this.createLinks(meta, link);
+                this.pages.push(link);
+            });
         }
 
         this.subscriptions.push(
