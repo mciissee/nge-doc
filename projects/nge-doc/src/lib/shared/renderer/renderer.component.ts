@@ -1,6 +1,7 @@
 import {
     Component,
     ComponentRef,
+    Injector,
     OnDestroy,
     OnInit,
     ViewContainerRef
@@ -23,6 +24,7 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
     constructor(
         private readonly doc: NgeDocService,
         private readonly route: ActivatedRoute,
+        private readonly injector: Injector,
         private readonly renderer: RendererService,
         private readonly container: ViewContainerRef,
     ) {}
@@ -59,14 +61,14 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
 
     private async rendererMarkdown(markdown: string) {
         const settings = this.route.snapshot.data as NgeDocSettings;
-        const renderer = settings.markdownRenderer;
-        if (!renderer) {
+        if (!settings.renderers?.markdown) {
             throw new Error(
-                '[nge-doc]: missing provider for NGE_DOC_MARKDOWN_RENDERER.'
+                '[nge-doc]: missing markdown renderer.'
             );
         }
 
-        let inputs: any = {
+        const renderer = settings.renderers.markdown;
+        let inputs: Record<string, any> = {
             file: markdown // we assume that a string in one line is an url to a markdown file.
         };
 
@@ -76,9 +78,18 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
             };
         }
 
+        let customInputs: Record<string, any> = {};
+        if (typeof renderer.inputs === 'function') {
+            customInputs = await renderer.inputs(this.injector);
+        } else if (typeof renderer.inputs === 'object') {
+            customInputs = renderer.inputs;
+        }
         this.component = await this.renderer.render({
-            inputs,
-            type: await renderer(),
+            inputs: {
+                ...customInputs,
+                ...inputs,
+            },
+            type: await renderer.component(),
             container: this.container
         });
     }

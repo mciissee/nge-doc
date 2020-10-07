@@ -8,19 +8,29 @@ declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMe
 
 declare type NgeDocRenderer = string | Promise<string> | (() => (Type<any> | Promise<Type<any>>));
 
+declare type NgeDocRenderers = {
+    /** Markdown renderer. */
+    markdown: {
+        /**
+         * Reference to a component that can render markdown content.
+         *
+         * The component should expose a `file` property to render a markdown from an url
+         * and a `data` property to render markdown from a string.
+         */
+        component: () => (Type<any> | Promise<Type<any>>);
+        /** Inputs objects to pass to the component instance. */
+        inputs?: Record<string, any> | ((injector: Injector) => (Record<string, any> | Promise<Record<string, any>>));
+    }
+};
+
 /** Documentation site config. */
 export interface NgeDocSettings {
     /** Metadata informations about a documentation site. */
     meta: StaticMeta | DynamicMeta;
     /** Pages of the documentation site. */
     pages: (StaticPage | DynamicPage)[];
-    /**
-     * Reference to a component that can render markdown content.
-     *
-     * The component should expose a `file` property to render a markdown from an url
-     * and a `data` property to render markdown from a string.
-     */
-    markdownRenderer?: () => (Type<any> | Promise<Type<any>>);
+    /** Custom renderers components */
+    renderers?: NgeDocRenderers;
 }
 
 /** Metadata informations about a documentation site. */
@@ -73,6 +83,19 @@ export interface NgeDocLink {
      *
      *  `renderer: () => import(....).then(m => m.MyComponent)` // reference to a lazy loaded component.
      *
+     * - A reference to a Module type means that the renderer is a dynamic component to render.
+     *
+     *  `renderer: () => MyModule` // direct reference to a module
+     *
+     *  `renderer: () => import(....).then(m => m.MyModule)` // reference to a lazy loaded module.
+     *
+     * The difference between referencing a module and referencing a component is the following:
+     *  - If you reference a module the dependencies (CommonModule, SharedModule...) of the component
+     *    that you want to render will be resolved.
+     *  - If you reference a component the dependencies will not be loaded.
+     *
+     * If you choose to reference a module, the module must contains a public field `component` that indicates
+     * the component that you want to render.
      */
     renderer: NgeDocRenderer;
     /** Sub links */
@@ -80,7 +103,7 @@ export interface NgeDocLink {
     /** A value indicating whether the link is expanded or not. */
     expanded?: boolean;
     /** Inputs to pass to the dynamic renderered component if `renderer` is a dynamic component. */
-    inputs?: any;
+    inputs?: Record<string, any>;
     /** Optional icon */
     icon?: string;
 }
