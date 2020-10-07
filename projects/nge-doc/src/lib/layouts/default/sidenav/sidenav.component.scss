@@ -3,16 +3,30 @@
   position: relative;
   height: 100vh;
   padding: 0;
-  overflow-y: auto;
+  overflow: auto;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 50%;
+  max-width: 90%;
+  line-height: 2.3em;
+  margin: 0 auto;
+  padding: 1rem 0;
+  box-sizing: border-box;
+}
+
+nav > ul {
+  margin: 1rem 0;
+  flex: 1;
 }
 
 header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  display: block;
   h2 {
     margin: 0;
-    margin-top: 8px;
   }
   .mat-icon, img {
     height: 48px;
@@ -27,18 +41,6 @@ header {
   }
 }
 
-nav {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: auto;
-  min-width: 50%;
-  max-width: 90%;
-  line-height: 2.3em;
-  margin: 0 auto;
-  padding: 1rem 0;
-  box-sizing: border-box;
-}
 
 ul,
 li,
@@ -94,9 +96,6 @@ li {
   margin-bottom: 4px;
 }
 
-.navigation-root {
-  margin: 1rem 0;
-}
 
 .caption {
   margin-top: .2rem;

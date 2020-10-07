@@ -8,7 +8,7 @@
     </ng-template>
     <h2>{{ state.meta.name }}</h2>
   </header>
-  <ul class="navigation-root" *ngIf="state.pages.length">
+  <ul *ngIf="state.pages.length">
     <ng-container *ngTemplateOutlet="template; context: { $implicit: state.pages }"></ng-container>
   </ul>
   <div class="spacer"></div>
