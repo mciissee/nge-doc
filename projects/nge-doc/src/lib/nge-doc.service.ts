@@ -181,12 +181,7 @@ export class NgeDocService implements OnDestroy {
             prevLink,
             currLink,
             nextLink,
-            meta: {
-                root: meta.root,
-                name: meta.name,
-                repo: meta.repo,
-                copyright: meta.copyright,
-            }
+            meta
         });
 
     }
