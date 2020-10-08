@@ -1,9 +1,12 @@
 import {
+    AfterViewInit,
     Component,
     ComponentRef,
+    ElementRef,
     Injector,
     OnDestroy,
     OnInit,
+    ViewChild,
     ViewContainerRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -14,22 +17,25 @@ import { NgeDocService } from '../../nge-doc.service';
 
 @Component({
     selector: 'nge-doc-renderer',
-    template: '',
+    templateUrl: 'renderer.component.html',
+    styleUrls: ['renderer.component.scss'],
     providers: [RendererService]
 })
-export class NgeDocRendererComponent implements OnInit, OnDestroy {
+export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
+    @ViewChild('toc', { read: ViewContainerRef })
+    container!: ViewContainerRef;
+    component?: ComponentRef<any>;
+
     private subscription?: Subscription;
-    private component?: ComponentRef<any>;
 
     constructor(
         private readonly doc: NgeDocService,
         private readonly route: ActivatedRoute,
         private readonly injector: Injector,
         private readonly renderer: RendererService,
-        private readonly container: ViewContainerRef,
     ) {}
 
-    async ngOnInit() {
+    async ngAfterViewInit() {
         this.subscription = this.doc.stateChanges.subscribe(
             this.onChangeRoute.bind(this)
         );

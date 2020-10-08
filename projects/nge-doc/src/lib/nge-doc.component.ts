@@ -3,8 +3,9 @@ import { NgeDocService } from './nge-doc.service';
 
 @Component({
     selector: 'nge-doc',
-    template: `<nge-doc-default-layout></nge-doc-default-layout>`,
+    templateUrl: './nge-doc.component.html',
     providers: [NgeDocService],
+    styleUrls: ['nge-doc.component.scss']
 })
 export class NgeDocComponent implements OnInit {
     constructor(

@@ -1,34 +1,47 @@
-main {
-  flex: 1;
-  display: block;
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-  padding: 0em 20px;
-}
-
-mat-drawer {
-  width: 20rem;
-  border-right: 1px solid #f8f8f8;
-  background-color: #fafbfc;
-  background-image: url('https://cdn.jsdelivr.net/gh/mciissee/nge-doc/projects/demo/src/assets/images/theia-doc-background.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-mat-drawer-content {
+:host {
+  --sidebar-width: 18rem;
   display: flex;
-  flex-direction: column;
-}
-
-mat-drawer-container {
   background-color: transparent;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
 }
 
-.spacer {
+aside {
+  display: block;
+  width: 0px;
+  border-right: 1px solid rgba(0, 0, 0, .07);;
+  background-color: #FAFBFC;
+  opacity: 0;
+  pointer-events: none;
+  transition: all .5s;
+  &.opened {
+    opacity: 1;
+    pointer-events: initial;
+    width: var(--sidebar-width);
+  }
+}
+
+section {
+  display: block;
   flex: 1;
+  margin: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+}
+
+nge-doc-header {
+  padding: 0em 1rem;
+  margin: 0;
+}
+
+nge-doc-renderer {
+  margin: 0;
+  padding: 0 1rem 1rem 1rem;
+}
+
+nge-doc-footer {
+  position: sticky;
+  bottom: 0;
 }

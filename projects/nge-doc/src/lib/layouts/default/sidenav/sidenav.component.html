@@ -1,42 +1,32 @@
-<nav *ngIf="state$|async as state">
+<ng-container *ngIf="state$|async as state">
   <header>
     <ng-container *ngIf="state.meta.logo; else: nologo">
       <img [src]="state.meta.logo" alt="Documentation Logo">
     </ng-container>
     <ng-template #nologo>
-      <mat-icon>menu_book</mat-icon>
+      <img src="https://icongr.am/octicons/book.svg?size=48&color=34495e">
     </ng-template>
-    <h2>{{ state.meta.name }}</h2>
+    <h1>{{ state.meta.name }}</h1>
   </header>
-  <ul *ngIf="state.pages.length">
+  <nav *ngIf="state.pages.length">
     <ng-container *ngTemplateOutlet="template; context: { $implicit: state.pages }"></ng-container>
-  </ul>
-  <div class="spacer"></div>
+  </nav>
   <nge-doc-logo></nge-doc-logo>
-</nav>
+</ng-container>
 <ng-template #template let-links>
-  <ng-container *ngFor="let link of links; trackBy: trackBy">
-    <ng-container *ngIf="!doc.isExpandable(link); else: expandable">
-      <li>
-        <a [routerLink]="link.href" [class.active]="doc.isActive(link)">
-          <img [src]="link.icon" *ngIf="link.icon">
+  <ul>
+    <ng-container *ngFor="let link of links; trackBy: trackBy">
+      <li [class.caption]="api.isExpandable(link)">
+        <a [routerLink]="link.href" [class.active]="api.isActive(link)">
+          <img *ngIf="link.icon" [src]="link.icon">
           {{ link.title }}
         </a>
       </li>
+      <ng-container *ngIf="api.isExpandable(link)">
+        <ng-container
+          *ngTemplateOutlet="template; context: { $implicit: link.children }">
+        </ng-container>
+      </ng-container>
     </ng-container>
-    <ng-template #expandable>
-      <li class="caption" (click)="link.expanded = !link.expanded">
-        <a [class.active]="doc.isActive(link)">
-          <img [src]="link.icon" *ngIf="link.icon">
-          {{ link.title }}
-        </a>
-        <button mat-icon-button>
-          <mat-icon>{{ link.expanded ? 'expand_more' : 'chevron_right'}}</mat-icon>
-        </button>
-      </li>
-      <ul *ngIf="link.expanded">
-          <ng-container *ngTemplateOutlet="template; context: { $implicit: link.children }"></ng-container>
-      </ul>
-    </ng-template>
-  </ng-container>
+  </ul>
 </ng-template>

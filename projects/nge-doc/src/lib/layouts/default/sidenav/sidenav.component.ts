@@ -10,10 +10,10 @@ import {
     styleUrls: ['./sidenav.component.scss'],
 })
 export class SidenavComponent {
-    state$ = this.doc.stateChanges;
+    state$ = this.api.stateChanges;
 
     constructor(
-        readonly doc: NgeDocService
+        readonly api: NgeDocService
     ) {}
 
     trackBy(_: number, item: NgeDocLink) {

@@ -23,6 +23,11 @@ footer :nth-child(n + 2) {
   flex: 1;
 }
 
-.mat-icon-button {
+a {
+  background-color: transparent;
+  color: currentColor;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
   width: auto;
 }

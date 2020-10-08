@@ -148,6 +148,9 @@ export class NgeDocService implements OnDestroy {
         } = this.state.value;
 
         const path = this.location.path();
+        if (path === currLink?.href) { // ignore same page navigation (fragment navigation)
+            return;
+        }
 
         // calculate current, previous and next links
 
