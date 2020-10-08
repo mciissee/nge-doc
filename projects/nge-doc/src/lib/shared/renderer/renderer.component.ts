@@ -6,13 +6,14 @@ import {
     Injector,
     OnDestroy,
     OnInit,
+    Type,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { RendererService } from './renderer.service';
-import { NgeDocSettings, NgeDocState } from '../../nge-doc';
+import { NgeDocSettings, NgeDocState, NGE_DOC_RENDERERS } from '../../nge-doc';
 import { NgeDocService } from '../../nge-doc.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
     component?: ComponentRef<any>;
 
     private subscription?: Subscription;
+    private markdownRenderer?: Type<any>;
 
     constructor(
         private readonly doc: NgeDocService,
@@ -66,14 +68,14 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
     }
 
     private async rendererMarkdown(markdown: string) {
-        const settings = this.route.snapshot.data as NgeDocSettings;
-        if (!settings.renderers?.markdown) {
+        const renderers = this.injector.get(NGE_DOC_RENDERERS);
+        if (!renderers?.markdown) {
             throw new Error(
                 '[nge-doc]: missing markdown renderer.'
             );
         }
 
-        const renderer = settings.renderers.markdown;
+        const renderer = renderers.markdown;
         let inputs: Record<string, any> = {
             file: markdown // we assume that a string in one line is an url to a markdown file.
         };
@@ -90,12 +92,16 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
         } else if (typeof renderer.inputs === 'object') {
             customInputs = renderer.inputs;
         }
+
+        if (!this.markdownRenderer) {
+            this.markdownRenderer = await renderer.component();
+        }
         this.component = await this.renderer.render({
             inputs: {
                 ...customInputs,
                 ...inputs,
             },
-            type: await renderer.component(),
+            type: this.markdownRenderer,
             container: this.container
         });
     }

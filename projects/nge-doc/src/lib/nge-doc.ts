@@ -1,4 +1,4 @@
-import { Injector, Type } from '@angular/core';
+import { InjectionToken, Injector, Type } from '@angular/core';
 
 declare type StaticPage = NgeDocLink;
 declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLink> | NgeDocLink[] | Promise<NgeDocLink[]>;
@@ -29,7 +29,6 @@ export interface NgeDocSettings {
     meta: StaticMeta | DynamicMeta;
     /** Pages of the documentation site. */
     pages: (StaticPage | DynamicPage)[];
-    /** Custom renderers components */
     renderers?: NgeDocRenderers;
 }
 
@@ -123,3 +122,8 @@ export interface NgeDocState {
     /** Next link of the current link. */
     nextLink?: NgeDocLink;
 }
+
+/** Custom renderers components */
+export const NGE_DOC_RENDERERS = new InjectionToken<NgeDocRenderers>(
+    'NGE_DOC_RENDERERS'
+);

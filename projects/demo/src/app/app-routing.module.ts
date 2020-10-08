@@ -1,14 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { NgeDocSettings } from 'nge-doc';
 
-const renderers = {
-    markdown: {
-        component: () => import('nge-markdown').then(m => m.NgeMarkdownComponent),
-    }
-};
 const documentation: NgeDocSettings = {
     meta: {
         name: 'Ngedoc',
@@ -25,7 +19,6 @@ const documentation: NgeDocSettings = {
         { title: 'Usage', href: 'usage', renderer: 'assets/docs/usage.md' },
         { title: 'Configuration', href: 'configuration', renderer: 'assets/docs/configuration.md' },
     ],
-    renderers
 };
 
 const routes: Routes = [
@@ -33,34 +26,6 @@ const routes: Routes = [
         path: 'docs',
         loadChildren: () => import('nge-doc').then(m => m.NgeDocModule),
         data: documentation,
-    },
-    {
-        path: 'teachers',
-        loadChildren: () => import('nge-doc').then(m => m.NgeDocModule),
-        data: {
-            meta: {
-                name: 'PLaTon pour les enseignants',
-                root: '/teachers/',
-                url: 'https://premierlangage.github.io/platon-front/',
-                repo: {
-                    name: 'platon-front',
-                    url: 'https://github.com/PremierLangage/platon-front'
-                },
-                copyright: 'Copyright © 2020 PLaTon'
-            },
-         pages: [
-            async (injector) => {
-                const http = injector.get(HttpClient);
-                const link =  await http.get<any>(
-                    // https://cdn.statically.io/gh/Premierlangage/PLaTon-doc/master/docs/index.json
-                    'https://cdn.jsdelivr.net/gh/PremierLangage/PLaTon-doc@master/docs/index.json'
-                ).toPromise();
-
-                return link;
-            },
-         ],
-         renderers
-        } as NgeDocSettings
     },
     { path: '**', redirectTo: 'docs', pathMatch: 'full' }
 ];

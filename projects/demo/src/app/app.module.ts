@@ -19,6 +19,7 @@ import {
 // MODULE
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { NGE_DOC_RENDERERS } from 'nge-doc';
 
 @NgModule({
     declarations: [AppComponent],
@@ -43,6 +44,14 @@ import { AppRoutingModule } from './app-routing.module';
         NgeMarkdownIconsProvider,
         NgeMarkdownHighlighterProvider,
         NgeMarkdownHighlighterMonacoProvider(NgeMonacoColorizerService),
+        {
+            provide: NGE_DOC_RENDERERS,
+            useValue: {
+                markdown: {
+                    component: () => import('nge-markdown').then(m => m.NgeMarkdownComponent),
+                }
+            }
+        }
     ],
     bootstrap: [AppComponent],
 })
