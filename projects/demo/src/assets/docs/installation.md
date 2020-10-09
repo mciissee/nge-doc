@@ -34,8 +34,8 @@ Install from npm
 npm i nge-doc
 ```
 
-Add Angular material to your application.
+Install Angular Cdk
 
 ```bash
-ng add @angular/material
+npm i @angular/cdk
 ```
