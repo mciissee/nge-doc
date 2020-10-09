@@ -3,20 +3,16 @@ import {
     Component,
     ComponentRef,
     ElementRef,
-    EventEmitter,
     Injector,
     OnDestroy,
-    OnInit,
-    Output,
     Type,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { NgeDocState, NGE_DOC_RENDERERS } from '../nge-doc';
+import { NgeDocService } from '../nge-doc.service';
 import { RendererService } from './renderer.service';
-import { NgeDocSettings, NgeDocState, NGE_DOC_RENDERERS } from '../../nge-doc';
-import { NgeDocService } from '../../nge-doc.service';
 
 @Component({
     selector: 'nge-doc-renderer',
@@ -27,13 +23,13 @@ import { NgeDocService } from '../../nge-doc.service';
 export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
     @ViewChild('container', { read: ViewContainerRef })
     container!: ViewContainerRef;
-    @Output()
-    render = new EventEmitter<ComponentRef<any>>();
 
     component?: ComponentRef<any>;
+    loading = false;
 
     private subscription?: Subscription;
     private markdownRenderer?: Type<any>;
+    private observer?: MutationObserver;
 
     constructor(
         private readonly doc: NgeDocService,
@@ -49,16 +45,18 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy() {
         this.clearViewContainer();
+        this.observer?.disconnect();
         this.subscription?.unsubscribe();
     }
 
     private async onChangeRoute(state: NgeDocState) {
         this.clearViewContainer();
+        this.loading = true;
         if (state.currLink) {
             const renderer = await state.currLink.renderer;
             switch (typeof renderer) {
                 case 'string':
-                    await this.rendererMarkdown(renderer);
+                    this.component = await this.rendererMarkdown(renderer);
                     break;
                 case 'function':
                     this.component = await this.renderer.render({
@@ -66,11 +64,21 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
                         inputs: state.currLink.inputs,
                         container: this.container,
                     });
-                    if (this.component) {
-                        this.render.emit(this.component);
-                    }
                     break;
             }
+        }
+
+        if (this.component) {
+            const cmp = this.component.injector.get(ElementRef).nativeElement as HTMLElement;
+            this.observer?.disconnect();
+            this.observer = new MutationObserver(() => {
+                this.observer?.disconnect();
+                this.loading = false;
+            });
+            this.observer.observe(cmp, {
+                childList: true,
+                subtree: true,
+            });
         }
     }
 
@@ -103,7 +111,8 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
         if (!this.markdownRenderer) {
             this.markdownRenderer = await renderer.component();
         }
-        this.component = await this.renderer.render({
+
+        return await this.renderer.render({
             inputs: {
                 ...customInputs,
                 ...inputs,

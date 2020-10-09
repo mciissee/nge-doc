@@ -35,9 +35,6 @@ nge-doc-sidenav {
   height: calc(100vh - var(--footer-height));
 }
 
-/* HEADER */
-
-
 /* CONTENT */
 section {
   flex: 1;
@@ -94,6 +91,7 @@ section {
     position: relative;
     display: grid;
     grid-template-columns: 80% auto;
+    padding-bottom: 1rem;
   }
 }
 
@@ -105,8 +103,11 @@ nge-doc-footer {
 
 // Small devices
 @media (max-width: 959.99px) {
-  article {
-    display: block;
+  section {
+    padding: 0 16px;
+    article {
+      display: block;
+    }
   }
   nge-doc-footer {
     padding: 0 2rem;

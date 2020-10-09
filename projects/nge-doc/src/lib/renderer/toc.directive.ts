@@ -88,7 +88,6 @@ export class NgeDocTocDirective implements OnDestroy, OnChanges {
             childList: true,
             subtree: true,
         });
-
     }
 
     private dashify(input: string) {
