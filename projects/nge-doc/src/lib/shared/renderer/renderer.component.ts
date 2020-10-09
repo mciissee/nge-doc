@@ -3,9 +3,11 @@ import {
     Component,
     ComponentRef,
     ElementRef,
+    EventEmitter,
     Injector,
     OnDestroy,
     OnInit,
+    Output,
     Type,
     ViewChild,
     ViewContainerRef
@@ -23,8 +25,11 @@ import { NgeDocService } from '../../nge-doc.service';
     providers: [RendererService]
 })
 export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('toc', { read: ViewContainerRef })
+    @ViewChild('container', { read: ViewContainerRef })
     container!: ViewContainerRef;
+    @Output()
+    render = new EventEmitter<ComponentRef<any>>();
+
     component?: ComponentRef<any>;
 
     private subscription?: Subscription;
@@ -32,7 +37,6 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
 
     constructor(
         private readonly doc: NgeDocService,
-        private readonly route: ActivatedRoute,
         private readonly injector: Injector,
         private readonly renderer: RendererService,
     ) {}
@@ -62,6 +66,9 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
                         inputs: state.currLink.inputs,
                         container: this.container,
                     });
+                    if (this.component) {
+                        this.render.emit(this.component);
+                    }
                     break;
             }
         }

@@ -7,7 +7,7 @@ const documentation: NgeDocSettings = {
     meta: {
         name: 'Ngedoc',
         root: '/docs/',
-        copyright: '© 2020, nge-doc',
+        logo: '/assets/images/nge.svg',
         repo: {
             name: 'nge-doc',
             url: 'https://github.com/mciissee/nge-doc',

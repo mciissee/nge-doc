@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
 })
 export class DefaultLayoutComponent implements OnInit, OnDestroy {
     private subscription?: Subscription;
-    opened = true;
+    sidebarOpened = true;
+    showTableOfContents = true;
 
     constructor(
         private readonly observer: BreakpointObserver
@@ -17,10 +18,14 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
          this.observer.observe([
+            Breakpoints.XSmall,
             Breakpoints.Small,
         ]).subscribe(result => {
+            this.sidebarOpened = true;
+            this.showTableOfContents = true;
             if (result.matches) {
-                this.opened = false;
+                this.sidebarOpened = false;
+                this.showTableOfContents = false;
             }
         });
     }

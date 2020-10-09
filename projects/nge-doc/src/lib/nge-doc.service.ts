@@ -11,7 +11,6 @@ export class NgeDocService implements OnDestroy {
         meta: {
             root: '',
             name: '',
-            copyright: '',
         },
         links: [],
         pages: [],

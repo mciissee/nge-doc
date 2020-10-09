@@ -1,33 +1,46 @@
+:host {
+  display: block;
+  background-color: #000;
+  color: #fff;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 footer {
   display: block;
   width: 100%;
-  padding: 1rem 1rem;
+  padding: 1rem 0;
   box-sizing: border-box;
-  overflow: hidden;
-  background-color: #fafbfc;
-  color: #586069;
 }
 
-/* DIRECT CHILDS OF FOOTER  */
 footer > div {
   display: flex;
   align-items: center;
+  padding: 0.2rem 0.4rem;
 }
 
-/* ALL CHILDS OF FOOTER EXCEPT THE FIRST */
-footer :nth-child(n + 2) {
-  padding: 0.2rem 0.4rem;
+footer > :first-child {
+  padding: 0.2rem 0rem;
+  font-size: 1.4em;
 }
 
 .spacer {
   flex: 1;
 }
 
-a {
+.icon-button {
   background-color: transparent;
   color: currentColor;
   text-decoration: none;
   display: flex;
   align-items: center;
   width: auto;
+}
+
+.powered-by {
+  color: hsla(0, 0%, 100%, 0.7);
+  a {
+    color: white;
+    text-decoration: none;
+  }
 }

@@ -47,8 +47,6 @@ export interface NgeDocMeta {
         /** Name of the repository. */
         name: string;
     };
-    /** Copyright informations */
-    copyright: string;
 }
 
 /**

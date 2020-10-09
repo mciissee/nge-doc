@@ -1,25 +1,28 @@
 <footer *ngIf="state$|async as state">
   <div>
     <ng-container *ngIf="state.prevLink">
-      <a [routerLink]="state.prevLink.href">
-        <img src="https://icongr.am/octicons/chevron-left.svg?size=24&color=34495e" alt="Previous page">
+      <a class="icon-button" [routerLink]="state.prevLink.href">
+        <img src="https://icongr.am/octicons/chevron-left.svg?size=36&color=FFFFFF" alt="Previous page">
         {{ state.prevLink.title }}
       </a>
     </ng-container>
     <div class="spacer"></div>
     <ng-container *ngIf="state.nextLink">
-      <a [routerLink]="state.nextLink.href">
+      <a class="icon-button" [routerLink]="state.nextLink.href">
         {{ state.nextLink.title }}
-        <img src="https://icongr.am/octicons/chevron-right.svg?size=24&color=34495e" alt="Next page">
+        <img src="https://icongr.am/octicons/chevron-right.svg?size=36&color=FFFFFF" alt="Next page">
       </a>
     </ng-container>
   </div>
   <div>
-    {{ state.meta.copyright }}
+    <div class="powered-by">
+      Powered by
+      <a href="https://github.com/mciissee/nge-doc" target="_blank">Ngedoc</a>
+    </div>
     <div class="spacer"></div>
     <ng-container *ngIf="state.meta.repo">
-      <a [href]="state.meta.repo.url" title="GitHub's repository">
-        <img src="https://icongr.am/devicon/github-original.svg?size=24&color=34495e" >
+      <a class="icon-button" [href]="state.meta.repo.url" title="GitHub's repository">
+        <img src="https://icongr.am/octicons/mark-github.svg?size=24&color=FFFFFF" >
       </a>
     </ng-container>
   </div>

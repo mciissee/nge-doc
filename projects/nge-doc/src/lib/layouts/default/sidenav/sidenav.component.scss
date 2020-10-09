@@ -1,7 +1,6 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   overflow: auto;
   color: #364149;
   line-height: 2.3em;
@@ -25,7 +24,6 @@ header {
 
 nav {
   margin: 0;
-  margin-bottom: 1rem;
   padding: 0;
   box-sizing: border-box;
   flex: 1;
