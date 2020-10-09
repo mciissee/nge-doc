@@ -7,7 +7,7 @@ const documentation: NgeDocSettings = {
     meta: {
         name: 'Ngedoc',
         root: '/docs/',
-        logo: '/assets/images/nge.svg',
+        logo: 'assets/images/nge.svg',
         repo: {
             name: 'nge-doc',
             url: 'https://github.com/mciissee/nge-doc',
