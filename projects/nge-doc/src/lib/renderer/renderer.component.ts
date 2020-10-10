@@ -52,14 +52,16 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
     private async onChangeRoute(state: NgeDocState) {
         this.clearViewContainer();
         this.loading = true;
+        this.component = undefined;
+        let component: ComponentRef<any> | undefined;
         if (state.currLink) {
             const renderer = await state.currLink.renderer;
             switch (typeof renderer) {
                 case 'string':
-                    this.component = await this.rendererMarkdown(renderer);
+                    component = await this.rendererMarkdown(renderer);
                     break;
                 case 'function':
-                    this.component = await this.renderer.render({
+                    component = await this.renderer.render({
                         type: await renderer(),
                         inputs: state.currLink.inputs,
                         container: this.container,
@@ -68,11 +70,12 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
             }
         }
 
-        if (this.component) {
-            const cmp = this.component.injector.get(ElementRef).nativeElement as HTMLElement;
+        if (component) {
+            const cmp = component.injector.get(ElementRef).nativeElement as HTMLElement;
             this.observer?.disconnect();
             this.observer = new MutationObserver(() => {
                 this.observer?.disconnect();
+                this.component = component;
                 this.loading = false;
             });
             this.observer.observe(cmp, {
