@@ -23,13 +23,14 @@ declare type NgeDocRenderers = {
     }
 };
 
+export declare type NgeDocLinkActionHandler = string | ((injector: Injector) => void | Promise<void>);
+
 /** Documentation site config. */
 export interface NgeDocSettings {
     /** Metadata informations about a documentation site. */
     meta: StaticMeta | DynamicMeta;
     /** Pages of the documentation site. */
     pages: (StaticPage | DynamicPage)[];
-    renderers?: NgeDocRenderers;
 }
 
 /** Metadata informations about a documentation site. */
@@ -49,6 +50,17 @@ export interface NgeDocMeta {
         /** Name of the repository. */
         name: string;
     };
+}
+
+export interface NgeDocLinAction {
+    /** Url to an icon to render. */
+    icon?: string;
+    /** Title of the action. */
+    title?: string;
+    /** Action tooltip */
+    tooltip?: string;
+    /** Action handler. (A string value here means that the action is an url to open in a new tab) */
+    run: NgeDocLinkActionHandler;
 }
 
 /**
@@ -105,6 +117,8 @@ export interface NgeDocLink {
     inputs?: Record<string, any>;
     /** Optional icon */
     icon?: string;
+    /** Custom actions */
+    actions?: NgeDocLinAction[];
 }
 
 /** Representation of the documentation state. */
