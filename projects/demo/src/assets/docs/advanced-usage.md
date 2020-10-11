@@ -38,7 +38,11 @@ const routes: Routes = [
             {
               title: 'MyComponent',
               href: 'my-component',
-              renderer: () => import('./my-component').then(m => m.MyComponent)
+              renderer: () => import('./my-component').then(m => m.MyComponent),
+              actions: [
+                { title: 'MyActionToOpenAnUrl', run: 'https://github.com/mciissee/nge-doc' }, // action to open an url
+                { title: 'MyDynamicAction', icon: 'https://....', run: injector => alert('My Action Handler') }
+              ]
             },
             {
               title: 'MyModule',

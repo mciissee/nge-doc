@@ -1,7 +1,18 @@
 # Getting started
 
-Ngedoc is a documentation tool for [Angular](https://angular.io) applications.
-Using Ngedoc, you can create a branded dynamic site from a set from Markdown files or a dynamic Angular coomponents to host the documentation of your projects.
+**Ngedoc** is a documentation tool for [Angular](https://angular.io) applications.
+Using Ngedoc, you can create a branded dynamic site from a set from Markdown files or a dynamic Angular components to host the documentation of your projects.
+
+## Features
+
+* Documentation from markdown files
+* Documentation from Angular dynamically lazy loaded component
+* Depends on only Angular CDK
+* Fully customizable
+* Automatic table of content generation
+* Automatic previous and next link generation
+* Integrated with Angular router
+* Comes with a default styles
 
 ## Contribution
 
