@@ -5,6 +5,7 @@ import {
     ElementRef,
     Injector,
     OnDestroy,
+    OnInit,
     Type,
     ViewChild,
     ViewContainerRef
@@ -20,8 +21,8 @@ import { RendererService } from './renderer.service';
     styleUrls: ['renderer.component.scss'],
     providers: [RendererService]
 })
-export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
-    @ViewChild('container', { read: ViewContainerRef })
+export class NgeDocRendererComponent implements OnInit, OnDestroy {
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     container!: ViewContainerRef;
 
     component?: ComponentRef<any>;
@@ -37,7 +38,7 @@ export class NgeDocRendererComponent implements AfterViewInit, OnDestroy {
         private readonly renderer: RendererService,
     ) {}
 
-    async ngAfterViewInit() {
+    ngOnInit() {
         this.subscription = this.doc.stateChanges.subscribe(
             this.onChangeRoute.bind(this)
         );
