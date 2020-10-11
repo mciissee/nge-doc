@@ -9,7 +9,12 @@
 
 header {
   box-sizing: border-box;
-  div, img {
+  display: flex;
+  align-items: center;
+  .header-action {
+    margin-right: 8px;
+  }
+  .header-action, img {
     width: 24px;
     height: 24px;
     cursor: pointer;

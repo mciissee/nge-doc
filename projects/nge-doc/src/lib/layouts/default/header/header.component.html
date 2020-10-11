@@ -1,5 +1,10 @@
-<header>
-  <div aria-label="Menu" (click)="toggle.emit()">
+<header *ngIf="state$|async as state">
+  <div class="header-action" aria-label="Menu" (click)="toggle.emit()">
     <img src="https://icongr.am/octicons/three-bars.svg?size=24&color=currentColor">
   </div>
+  <ng-container *ngIf="state.meta.baseUrl">
+    <a class="header-action" aria-label="Back" [routerLink]="state.meta.baseUrl">
+      <img src="https://icongr.am/octicons/home.svg?size=24&color=currentColor">
+    </a>
+  </ng-container>
 </header>

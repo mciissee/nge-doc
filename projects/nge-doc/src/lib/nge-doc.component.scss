@@ -2,7 +2,7 @@
 :host::ng-deep {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #34495e;
   font-family: Source Sans Pro, Helvetica Neue, Arial, sans-serif !important;
   font-size: 15px !important;
@@ -15,6 +15,34 @@
     -webkit-text-size-adjust: none;
     -webkit-touch-callout: none;
     box-sizing: border-box;
+  }
+
+
+  // force all native elements to use Source Sans Pro font-family
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  div,
+  span,
+  header,
+  footer,
+  aside,
+  nav,
+  main,
+  section,
+  ul,
+  ol,
+  i,
+  b,
+  mark,
+  li,
+  a,
+  button,
+  input {
     font-family: inherit;
   }
 }

@@ -171,7 +171,9 @@ export class NgeDocService implements OnDestroy {
         }
 
         if (!currLink) {
-            this.router.navigateByUrl(this.links[0].href);
+            this.router.navigateByUrl(this.links[0].href, {
+                replaceUrl: true
+            });
             return;
         }
 
