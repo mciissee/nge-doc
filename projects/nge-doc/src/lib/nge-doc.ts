@@ -1,14 +1,14 @@
 import { InjectionToken, Injector, Type } from '@angular/core';
 
-declare type StaticPage = NgeDocLink;
-declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLink> | NgeDocLink[] | Promise<NgeDocLink[]>;
+export declare type StaticPage = NgeDocLink;
+export declare type DynamicPage = (injector: Injector) => NgeDocLink | Promise<NgeDocLink> | NgeDocLink[] | Promise<NgeDocLink[]>;
 
-declare type StaticMeta = NgeDocMeta;
-declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;
+export declare type StaticMeta = NgeDocMeta;
+export declare type DynamicMeta = (injector: Injector) => NgeDocMeta | Promise<NgeDocMeta>;
 
-declare type NgeDocRenderer = string | Promise<string> | (() => (Type<any> | Promise<Type<any>>));
+export declare type NgeDocRenderer = string | Promise<string> | (() => (Type<any> | Promise<Type<any>>));
 
-declare type NgeDocRenderers = {
+export declare type NgeDocRenderers = {
     /** Markdown renderer. */
     markdown: {
         /**
