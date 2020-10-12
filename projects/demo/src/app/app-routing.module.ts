@@ -8,7 +8,7 @@ const documentation: NgeDocSettings = {
         name: 'Ngedoc',
         root: '/docs/',
         logo: 'assets/images/nge.svg',
-        baseUrl: '/docs/getting-started',
+        backUrl: '/docs/getting-started',
         repo: {
             name: 'nge-doc',
             url: 'https://github.com/mciissee/nge-doc',
