@@ -50,6 +50,11 @@ export interface NgeDocMeta {
         /** Name of the repository. */
         name: string;
     };
+    /** social links to show insides the footer */
+    links?: {
+        href: string;
+        icon: string;
+    }[];
 }
 
 export interface NgeDocLinAction {

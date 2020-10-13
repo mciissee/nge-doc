@@ -35,6 +35,12 @@ footer > :first-child {
   display: flex;
   align-items: center;
   width: auto;
+  padding: .2rem;
+  img {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+  }
 }
 
 .powered-by {

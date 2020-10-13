@@ -12,7 +12,7 @@ const documentation: NgeDocSettings = {
         repo: {
             name: 'nge-doc',
             url: 'https://github.com/mciissee/nge-doc',
-        },
+        }
     },
     pages: [
         { title: 'Getting Started', href: 'getting-started', renderer: 'assets/docs/getting-started.md' },

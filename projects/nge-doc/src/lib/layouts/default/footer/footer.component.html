@@ -20,6 +20,14 @@
       <a href="https://github.com/mciissee/nge-doc" target="_blank">Ngedoc</a>
     </div>
     <div class="spacer"></div>
+    <ng-container *ngIf="state.meta.links">
+      <ng-container *ngFor="let item of state.meta.links">
+        <a class="icon-button" [href]="item.href">
+          <img [src]="item.icon">
+        </a>
+      </ng-container>
+    </ng-container>
+
     <ng-container *ngIf="state.meta.repo">
       <a class="icon-button" [href]="state.meta.repo.url" title="GitHub's repository">
         <img src="https://icongr.am/octicons/mark-github.svg?size=24&color=FFFFFF" >
