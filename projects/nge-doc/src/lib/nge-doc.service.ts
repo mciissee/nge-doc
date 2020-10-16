@@ -170,8 +170,17 @@ export class NgeDocService implements OnDestroy {
             }
         }
 
+        // navigate to first page if currLink is not defined
         if (!currLink) {
             this.router.navigateByUrl(this.links[0].href, {
+                replaceUrl: true
+            });
+            return;
+        }
+
+        // navigate to first children if currLink doesn't have a renderer
+        if (!currLink.renderer && currLink.children?.length) {
+            this.router.navigateByUrl(currLink.children[0].href, {
                 replaceUrl: true
             });
             return;

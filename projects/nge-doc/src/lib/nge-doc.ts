@@ -81,6 +81,9 @@ export interface NgeDocLink {
      *
      * - A one line string value means that the renderer is an url to a markdown file to render.
      *
+     * Remarks:
+     * Not required if `children` is defined.
+     *
      * Example:
      *
      * `renderer: assets/my-file.md`
@@ -113,7 +116,7 @@ export interface NgeDocLink {
      * If you choose to reference a module, the module must contains a public field `component` that indicates
      * the component that you want to render.
      */
-    renderer: NgeDocRenderer;
+    renderer?: NgeDocRenderer;
     /** Sub links */
     children?: NgeDocLink[];
     /** A value indicating whether the link is expanded or not. */

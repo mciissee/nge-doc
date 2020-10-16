@@ -1,5 +1,5 @@
+import { HttpClient } from '@angular/common/http';
 import {
-    AfterViewInit,
     Component,
     ComponentRef,
     ElementRef,
@@ -22,15 +22,19 @@ import { RendererService } from './renderer.service';
     providers: [RendererService]
 })
 export class NgeDocRendererComponent implements OnInit, OnDestroy {
+    private subscription?: Subscription;
+    private markdownRenderer?: Type<any>;
+    private observer?: MutationObserver;
+
     @ViewChild('container', { read: ViewContainerRef, static: true })
     container!: ViewContainerRef;
 
     component?: ComponentRef<any>;
     loading = false;
 
-    private subscription?: Subscription;
-    private markdownRenderer?: Type<any>;
-    private observer?: MutationObserver;
+    get notFound() {
+        return !this.loading && !this.component;
+    }
 
     constructor(
         private readonly doc: NgeDocService,
@@ -52,41 +56,43 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
 
     private async onChangeRoute(state: NgeDocState) {
         this.clearViewContainer();
-        this.loading = true;
-        this.component = undefined;
-        let component: ComponentRef<any> | undefined;
-        if (state.currLink) {
-            const renderer = await state.currLink.renderer;
-            switch (typeof renderer) {
-                case 'string':
-                    component = await this.rendererMarkdown(renderer);
-                    break;
-                case 'function':
-                    component = await this.renderer.render({
-                        type: await renderer(),
-                        inputs: state.currLink.inputs,
-                        container: this.container,
-                    });
-                    break;
+        try {
+            let component: ComponentRef<any> | undefined;
+            if (state.currLink) {
+                const renderer = await state.currLink.renderer;
+                switch (typeof renderer) {
+                    case 'string':
+                        component = await this.rendererMarkdown(renderer);
+                        break;
+                    case 'function':
+                        component = await this.renderer.render({
+                            type: await renderer(),
+                            inputs: state.currLink.inputs,
+                            container: this.container,
+                        });
+                        break;
+                }
             }
-        }
-
-        if (component) {
-            const cmp = component.injector.get(ElementRef).nativeElement as HTMLElement;
-            this.observer?.disconnect();
-            this.observer = new MutationObserver(() => {
+            if (component) {
+                const cmp = component.injector.get(ElementRef).nativeElement as HTMLElement;
                 this.observer?.disconnect();
-                this.component = component;
-                this.loading = false;
-            });
-            this.observer.observe(cmp, {
-                childList: true,
-                subtree: true,
-            });
+                this.observer = new MutationObserver(() => {
+                    this.observer?.disconnect();
+                    this.component = component;
+                    this.loading = false;
+                });
+                this.observer.observe(cmp, {
+                    childList: true,
+                    subtree: true,
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            this.loading = false;
         }
     }
 
-    private async rendererMarkdown(markdown: string) {
+    private async rendererMarkdown(data: string) {
         const renderers = this.injector.get(NGE_DOC_RENDERERS);
         if (!renderers?.markdown) {
             throw new Error(
@@ -96,12 +102,19 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
 
         const renderer = renderers.markdown;
         let inputs: Record<string, any> = {
-            file: markdown // we assume that a string in one line is an url to a markdown file.
+            data // we assume that data is a markdown content.
         };
 
-        if (markdown.includes('\n')) { // markdown string contains at least two line
+        if (!data.includes('\n')) { // if data does not include at least two lines then it's an url
+            const http = this.injector.get(HttpClient, null);
+            if (!http) {
+                throw new Error(
+                    '[nge-doc] When using the `file` renderer you *have to* pass the `HttpClient` as a parameter of the `forRoot` method. See README for more information'
+                );
+            }
+
             inputs = {
-                data: markdown
+                data: await http.get(data, { responseType: 'text' }).toPromise()
             };
         }
 
@@ -130,5 +143,6 @@ export class NgeDocRendererComponent implements OnInit, OnDestroy {
         this.component?.destroy();
         this.component = undefined;
         this.container.clear();
+        this.loading = true;
     }
 }

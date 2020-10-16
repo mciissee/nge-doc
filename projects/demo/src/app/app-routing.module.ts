@@ -18,7 +18,7 @@ const documentation: NgeDocSettings = {
         { title: 'Getting Started', href: 'getting-started', renderer: 'assets/docs/getting-started.md' },
         { title: 'Installation', href: 'installation', renderer: 'assets/docs/installation.md' },
         { title: 'Usage', href: 'usage', renderer: 'assets/docs/usage.md' },
-        { title: 'Advanced Usage', href: 'advanced-usage', renderer: 'assets/docs/advanced-usage.md' },
+        { title: 'Advanced Usage', href: 'advanced-usage', renderer: 'assets/docs/advanced-usage.md' }
     ],
 };
 
