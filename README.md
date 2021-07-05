@@ -1,5 +1,7 @@
 # Getting started
 
+## **This is no longer supported, please consider using [@mcisse/nge](https://github.com/mciissee/nge) instead**
+
 Ngedoc is a documentation tool for [Angular](https://angular.io) applications.
 Using Ngedoc, you can create a branded dynamic site from a set from Markdown files or a dynamic Angular coomponents to host the documentation of your projects.
 
